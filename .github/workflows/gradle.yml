@@ -23,5 +23,8 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew shadowJar
-    - name: Show directory
-      run: ls -la build/libs
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v2
+      with:
+        name: HomePlugin-*.jar
+        path: build/libs
