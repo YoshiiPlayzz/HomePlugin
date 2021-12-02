@@ -1,0 +1,17 @@
+name: HomePlugin
+version: 1.0
+main: homes.HomePlugin
+api-version: 1.17
+description: HomePlugin LUL
+author: YoshiiPlayzz
+commands:
+  home:
+    description: Teleports you to a set home
+  sethome:
+    description: Sets your home
+  delhome:
+    description: Deletes a home
+  homes:
+    description: Lists your home
+  mending:
+    description: Select a villager (liberian) and if he changes his job you get notified
