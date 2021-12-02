@@ -22,6 +22,8 @@ public class HomeTC implements TabCompleter {
                 if (args.length == 1) {
                     l.addAll(HomePlugin.homes.getConfigurationSection("Homes." + p.getUniqueId().toString()).getKeys(false));
                 }
+            }else if (alias.equalsIgnoreCase("sethome")){
+                l.add("");
             }
         }
         return l;

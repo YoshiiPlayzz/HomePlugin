@@ -1,6 +1,3 @@
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
@@ -28,11 +25,17 @@ jobs:
         run: ./gradlew shadowJar
       - name: Rename Jar
         run: cd build/libs && mv *.jar HomePlugin.jar
+      - name: List files
+        run: ls -la
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: HomePlugin.jar
           path: build/libs
+      - name: Get version
+        run: |
+          echo "::set-output name=version::$(cat version)"
+        id: version
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -40,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
             tag_name: v1.0
-            release_name: Release v1.0
+            release_name: Release v${{ steps.version.outputs.version}}
             draft: false
             prerelease: false
       -   name: Upload Release Asset
