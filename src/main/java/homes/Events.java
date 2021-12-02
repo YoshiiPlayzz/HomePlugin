@@ -52,7 +52,7 @@ public class Events implements Listener {
                 villager_pending.remove(p);
                 assert en instanceof Villager;
                 villager_mending.put((Villager) en, p);
-                p.sendMessage(ChatColor.GREEN + "Checking now the Villager you have rightclicked!");
+                p.sendMessage(ChatColor.GREEN + "Checking now the Villager you have right-clicked!");
             }
         }
     }
@@ -85,9 +85,8 @@ public class Events implements Listener {
 
                         }
                     }
-
                     if (x == 0) {
-                        p.sendMessage(ChatColor.RED + "Villager trade no books!");
+                        p.sendMessage(ChatColor.RED + "Villager trades no books!");
                     }
                 }
             }, 1L);

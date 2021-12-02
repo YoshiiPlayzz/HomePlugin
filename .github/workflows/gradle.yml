@@ -23,8 +23,12 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew shadowJar
+      - name: Get version
+        run: |
+          echo "::set-output name=version::$(cat version)"
+        id: version
       - name: Rename Jar
-        run: cd build/libs && mv *.jar HomePlugin.jar
+        run: cd build/libs && mv *.jar HomePlugin_v${{ steps.version.outputs.version}}.jar
       - name: List files
         run: ls -la
       - name: Upload Artifact
@@ -38,8 +42,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            tag_name: v1.0
-            release_name: Release v1.0
+            tag_name: v${{ steps.version.outputs.version}}
+            release_name: Release v${{ steps.version.outputs.version}}
             draft: false
             prerelease: false
       -   name: Upload Release Asset
