@@ -1,9 +1,11 @@
 name: Java CI with Gradle
+
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+
 jobs:
   build:
 
@@ -22,7 +24,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew shadowJar
       - name: Rename Jar
-        run: mv *.jar HomePlugin.jar
+        run: cd build/libs && mv *.jar HomePlugin.jar
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
