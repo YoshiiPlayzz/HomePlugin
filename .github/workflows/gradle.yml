@@ -34,7 +34,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: HomePlugin.jar
+          name: HomePlugin_v${{ steps.version.outputs.version}}.jar
           path: build/libs
       - name: Create Release
         id: create_release
@@ -53,6 +53,6 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_name: HomePlugin.jar
-            asset_path: ./build/libs/HomePlugin.jar
+            asset_name: HomePlugin_v${{ steps.version.outputs.version}}.jar
+            asset_path: ./build/libs/HomePlugin_v${{ steps.version.outputs.version}}.jar
             asset_content_type: application/jar
