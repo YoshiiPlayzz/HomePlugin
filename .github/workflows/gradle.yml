@@ -48,5 +48,5 @@ jobs:
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_name: HomePlugin.jar
-            asset_path: HomePlugin.jar
+            asset_path: home/libs/HomePlugin.jar
             asset_content_type: application/jar
