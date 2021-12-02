@@ -47,6 +47,5 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ./HomePlugin.jar
             asset_name: HomePlugin.jar
             asset_content_type: application/jar
