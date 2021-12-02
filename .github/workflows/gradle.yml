@@ -25,6 +25,8 @@ jobs:
         run: ./gradlew shadowJar
       - name: Rename Jar
         run: cd build/libs && mv *.jar HomePlugin.jar
+      - name: List files
+        run: ls -la
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
