@@ -1,42 +1,38 @@
 package de.stealthcoders.spu;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.logging.Level;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.logging.Level;
+
 /**
- *
  * @author Benjamin | Bentipa
  * @version 1.0 Created on 03.04.2015
- *
  */
 public class SpigotPluginUpdater {
 
     public static final String VERSION = "SPU 2.0 by stealth-coders";
-
-    private URL url;
     private final JavaPlugin plugin;
     private final String pluginurl;
-
+    private URL url;
     private boolean canceled = false;
+    private String version = "";
+    private String downloadURL = "";
+    private String changeLog = "";
+    private boolean out = true;
 
     /**
      * Create a new SpigotPluginUpdate to check and update your plugin
      *
-     * @param plugin - your plugin
+     * @param plugin    - your plugin
      * @param pluginurl - the url to your plugin.html on your webserver
      */
     public SpigotPluginUpdater(JavaPlugin plugin, String pluginurl) {
@@ -50,11 +46,26 @@ public class SpigotPluginUpdater {
         this.pluginurl = pluginurl;
     }
 
-    private String version = "";
-    private String downloadURL = "";
-    private String changeLog = "";
+    private static String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
 
-    private boolean out = true;
+    public static JsonObject readJsonFromUrl(String url) throws IOException, JsonIOException {
+        InputStream is = new URL(url).openStream();
+        try {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            JsonObject json = new JsonParser().parse(jsonText).getAsJsonObject();
+            return json;
+        } finally {
+            is.close();
+        }
+    }
 
     /**
      * Enable a console output if new Version is availible
@@ -80,27 +91,21 @@ public class SpigotPluginUpdater {
             return false;
         }
         try {
-            URLConnection con = url.openConnection();
-            InputStream _in = con.getInputStream();
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(_in);
+            JsonObject j = readJsonFromUrl(url.toString());
 
-            Node nod = doc.getElementsByTagName("item").item(0);
-            NodeList children = nod.getChildNodes();
+            version = j.get("tag_name").getAsString();
+            downloadURL = j.get("assets").getAsJsonObject().get("browser_download_url").getAsString();
 
-            version = children.item(1).getTextContent();
-            downloadURL = children.item(3).getTextContent();
-            changeLog = children.item(5).getTextContent();
             if (newVersionAvailiable(plugin.getDescription().getVersion(), version.replaceAll("[a-zA-z ]", ""))) {
                 if (out) {
                     plugin.getLogger().log(Level.INFO, " New Version found: {0}", version.replaceAll("[a-zA-z ]", ""));
                     plugin.getLogger().log(Level.INFO, " Download it here: {0}", downloadURL);
-                    plugin.getLogger().log(Level.INFO, " Changelog: {0}", changeLog);
                 }
 
                 return true;
             }
 
-        } catch (IOException | SAXException | ParserConfigurationException e) {
+        } catch (IOException e) {
             plugin.getLogger().log(Level.WARNING, "Error in checking update for ''{0}''!", plugin.getName());
             plugin.getLogger().log(Level.WARNING, "Error: ", e);
         }
@@ -121,11 +126,11 @@ public class SpigotPluginUpdater {
             newv = newv.replace('.', '_');
             if (oldv.split("_").length != 0 && oldv.split("_").length != 1 && newv.split("_").length != 0 && newv.split("_").length != 1) {
 
-                int vnum = Integer.valueOf(oldv.split("_")[0]);
-                int vsec = Integer.valueOf(oldv.split("_")[1]);
+                int vnum = Integer.parseInt(oldv.split("_")[0]);
+                int vsec = Integer.parseInt(oldv.split("_")[1]);
 
-                int newvnum = Integer.valueOf(newv.split("_")[0]);
-                int newvsec = Integer.valueOf(newv.split("_")[1]);
+                int newvnum = Integer.parseInt(newv.split("_")[0]);
+                int newvsec = Integer.parseInt(newv.split("_")[1]);
                 if (newvnum > vnum) {
                     return true;
                 }

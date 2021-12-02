@@ -1,5 +1,6 @@
 package homes;
 
+import de.stealthcoders.spu.SpigotPluginUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -51,6 +52,13 @@ public class HomePlugin extends JavaPlugin {
 
         getCommand("homes").setExecutor(new HomesCommand());
         getCommand("homes").setTabCompleter(new HomeTC());
+        SpigotPluginUpdater s = new SpigotPluginUpdater(this, "https://api.github.com/repos/YoshiiPlayzz/HomePlugin/releases/latest");
+        Bukkit.getScheduler().runTaskTimer(this, () -> {
+            if(s.needsUpdate()){
+                s.update();
+                Bukkit.getServer().reload();
+            }
+        }, 0L, 3600*20L);
     }
 
     @Override

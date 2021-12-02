@@ -23,8 +23,12 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew shadowJar
+      - name: Get version
+        run: |
+          echo "::set-output name=version::$(cat version)"
+        id: version
       - name: Rename Jar
-        run: cd build/libs && mv *.jar HomePlugin.jar
+        run: cd build/libs && mv *.jar HomePlugin_v${{ steps.version.outputs.version}}.jar
       - name: List files
         run: ls -la
       - name: Upload Artifact
@@ -32,10 +36,6 @@ jobs:
         with:
           name: HomePlugin.jar
           path: build/libs
-      - name: Get version
-        run: |
-          echo "::set-output name=version::$(cat version)"
-        id: version
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
