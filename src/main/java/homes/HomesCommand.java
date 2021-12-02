@@ -15,7 +15,6 @@ public class HomesCommand implements CommandExecutor {
             Player p = (Player) sender;
             String m = ChatColor.AQUA + "List of Homes: " + ChatColor.DARK_AQUA;
             for (String s : HomePlugin.homes.getConfigurationSection("Homes." + p.getUniqueId().toString()).getKeys(false)) {
-
                 m += s + ", ";
             }
             p.sendMessage(m);

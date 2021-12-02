@@ -38,18 +38,19 @@ public class HomePlugin extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new Events(), this);
 
-        Bukkit.getPluginCommand("mending").setExecutor(new MendingCommand());
+        getCommand("mending").setExecutor(new MendingCommand());
 
-        Bukkit.getPluginCommand("sethome").setExecutor(new SetHomeCommand());
+        getCommand("sethome").setExecutor(new SetHomeCommand());
+        getCommand("sethome").setTabCompleter(new HomeTC());
 
-        Bukkit.getPluginCommand("delhome").setExecutor(new DelHomeCommand());
-        Bukkit.getPluginCommand("delhome").setTabCompleter(new HomeTC());
+        getCommand("delhome").setExecutor(new DelHomeCommand());
+        getCommand("delhome").setTabCompleter(new HomeTC());
 
-        Bukkit.getPluginCommand("home").setExecutor(new HomeCommand());
-        Bukkit.getPluginCommand("home").setTabCompleter(new HomeTC());
+        getCommand("home").setExecutor(new HomeCommand());
+        getCommand("home").setTabCompleter(new HomeTC());
 
-        Bukkit.getPluginCommand("homes").setExecutor(new HomesCommand());
-
+        getCommand("homes").setExecutor(new HomesCommand());
+        getCommand("homes").setTabCompleter(new HomeTC());
     }
 
     @Override

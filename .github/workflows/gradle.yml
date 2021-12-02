@@ -32,14 +32,18 @@ jobs:
         with:
           name: HomePlugin.jar
           path: build/libs
+      - name: Get version
+        run: |
+          echo "::set-output name=version::$(cat version)"
+        id: version
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            tag_name: v1.0
-            release_name: Release v1.0
+            tag_name: v${{ steps.version.outputs.version}}
+            release_name: Release v${{ steps.version.outputs.version}}
             draft: false
             prerelease: false
       -   name: Upload Release Asset
