@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
+import java.util.Set;
 
 
 public class HomeCommand implements CommandExecutor {
@@ -28,13 +29,21 @@ public class HomeCommand implements CommandExecutor {
 
                 if (HomePlugin.homes.contains(prefix)) {
                     teleport(p, home, prefix);
+                }else{
+                    p.sendMessage(ChatColor.RED + "Home not found!");
                 }
 
             } else {
                 if (args.length == 0) {
                     if (HomePlugin.homes.contains(prefix)) {
-                        String home = Objects.requireNonNull(HomePlugin.homes.getConfigurationSection(prefix)).getKeys(false).stream().findFirst().get();
-                        teleport(p, home, prefix);
+                        Set<String> homes = HomePlugin.homes.getConfigurationSection(prefix).getKeys(false);
+                        if(!homes.isEmpty()) {
+                            String home = homes.stream().iterator().next();
+                            prefix += "." + home;
+                            teleport(p, home, prefix);
+                        }else{
+                            p.sendMessage(ChatColor.RED + "Home not found!");
+                        }
                     }
                 }
             }
@@ -57,9 +66,10 @@ public class HomeCommand implements CommandExecutor {
                 p.teleport(loc);
                 p.sendMessage(ChatColor.GREEN + "Welcome at '" + ChatColor.AQUA + home + ChatColor.GREEN + "' !");
                 Events.hometeleporting.remove(p);
-
+                Events.location.remove(p);
             }, 20 * 3L).getTaskId();
             Events.hometeleporting.put(p, task);
+            Events.location.put(p, p.getLocation());
         }
     }
 }

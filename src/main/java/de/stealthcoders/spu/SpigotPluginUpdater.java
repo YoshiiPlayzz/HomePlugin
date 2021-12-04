@@ -93,8 +93,8 @@ public class SpigotPluginUpdater {
         try {
             JsonObject j = readJsonFromUrl(url.toString());
 
-            version = j.get("tag_name").getAsString();
-            downloadURL = j.get("assets").getAsJsonObject().get("browser_download_url").getAsString();
+            version = j.getAsJsonArray().get(0).getAsJsonObject().get("tag_name").getAsString();
+            downloadURL =j.getAsJsonArray().get(0).getAsJsonObject().get("assets").getAsJsonObject().get("browser_download_url").getAsString();
 
             if (newVersionAvailiable(plugin.getDescription().getVersion(), version.replaceAll("[a-zA-z ]", ""))) {
                 if (out) {
