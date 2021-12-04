@@ -1,5 +1,5 @@
 name: HomePlugin
-version: v1.2
+version: 1.2.1
 main: homes.HomePlugin
 api-version: 1.17
 description: HomePlugin LUL
