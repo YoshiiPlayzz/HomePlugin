@@ -17,6 +17,7 @@ public class MendingCommand implements CommandExecutor {
                 p.sendMessage(ChatColor.GREEN + "Please rightclick a Villager!");
             }else{
                 Events.villager_pending.remove(p);
+                Events.villager_mending.remove(p);
                 p.sendMessage(ChatColor.RED + "Unregistered");
             }
         }
